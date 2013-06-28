@@ -22,6 +22,8 @@
 #include "devices.h"
 #include "board-m7.h"
 
+uint32_t max_gpu = 0;
+
 #ifdef CONFIG_MSM_DCVS
 static struct msm_dcvs_freq_entry grp3d_freq[] = {
        {0, 0, 333932},
@@ -242,9 +244,36 @@ struct platform_device device_kgsl_3d0 = {
 	},
 };
 
+/*gpuoc*/
+
+static int __init read_max_gpu(char *gpu_oc)
+{
+	if (strcmp(gpu_oc, "1") == 0) {
+		max_gpu = 1;
+	} else if (strcmp(gpu_oc, "2") == 0) {
+		max_gpu = 2;
+	} else if (strcmp(gpu_oc, "3") == 0) {
+		max_gpu = 3;
+	} else {
+		max_gpu = 0;
+	}	
+	return 0;
+}
+
+__setup("gpu_oc=", read_max_gpu);
+/*end gpuoc*/
+
 void __init m7_init_gpu(void)
 {
 	unsigned int version = socinfo_get_version();
+	if (max_gpu == 1)
+		kgsl_3d0_pdata.pwrlevel[0].gpu_freq = 450000000;
+
+	if (max_gpu == 2)
+		kgsl_3d0_pdata.pwrlevel[0].gpu_freq = 480000000;
+
+	if (max_gpu == 3)
+		kgsl_3d0_pdata.pwrlevel[0].gpu_freq = 533000000;
 
 	if (cpu_is_apq8064ab())
 		kgsl_3d0_pdata.pwrlevel[0].gpu_freq = 450000000;
