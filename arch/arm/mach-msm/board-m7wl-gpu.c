@@ -22,7 +22,7 @@
 #include "devices.h"
 #include "board-m7wl.h"
 
-uint32_t max_gpu = 0;
+uint32_t max_gpu = 1;
 
 #ifdef CONFIG_MSM_DCVS
 static struct msm_dcvs_freq_entry grp3d_freq[] = {
@@ -269,12 +269,6 @@ void __init m7wl_init_gpu(void)
 
         if (max_gpu == 1)
                 kgsl_3d0_pdata.pwrlevel[0].gpu_freq = 450000000;
-
-        if (max_gpu == 2)
-                kgsl_3d0_pdata.pwrlevel[0].gpu_freq = 480000000;
-
-        if (max_gpu == 3)
-                kgsl_3d0_pdata.pwrlevel[0].gpu_freq = 533000000;
 
 	if (cpu_is_apq8064ab())
 		kgsl_3d0_pdata.pwrlevel[0].gpu_freq = 450000000;
