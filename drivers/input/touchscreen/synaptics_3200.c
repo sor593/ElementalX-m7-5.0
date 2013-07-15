@@ -3024,6 +3024,9 @@ static void synaptics_ts_button_func(struct synaptics_ts_data *ts)
 				}
 			}
 			if (ts->htc_event == SYN_AND_REPORT_TYPE_A) {
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+			   if (scr_suspended == false) {
+#endif
 				if (ts->support_htc_event) {
 					input_report_abs(ts->input_dev, ABS_MT_AMPLITUDE,
 						100 << 16 | 100);
@@ -3042,7 +3045,13 @@ static void synaptics_ts_button_func(struct synaptics_ts_data *ts)
 				input_report_abs(ts->input_dev, ABS_MT_POSITION_Y,
 					y_position);
 				input_mt_sync(ts->input_dev);
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+			   }
+#endif
 			} else if (ts->htc_event == SYN_AND_REPORT_TYPE_B) {
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+			   if (scr_suspended == false) {
+#endif
 				if (ts->support_htc_event) {
 					input_report_abs(ts->input_dev, ABS_MT_AMPLITUDE,
 						100 << 16 | 100);
@@ -3062,6 +3071,9 @@ static void synaptics_ts_button_func(struct synaptics_ts_data *ts)
 					x_position);
 				input_report_abs(ts->input_dev, ABS_MT_POSITION_Y,
 					y_position);
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+			   }
+#endif
 			}
 		}
 		else if (data & 0x02) {
@@ -3085,6 +3097,9 @@ static void synaptics_ts_button_func(struct synaptics_ts_data *ts)
 				}
 			}
 			if (ts->htc_event == SYN_AND_REPORT_TYPE_A) {
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+			   if (scr_suspended == false) {
+#endif
 				if (ts->support_htc_event) {
 					input_report_abs(ts->input_dev, ABS_MT_AMPLITUDE,
 						100 << 16 | 100);
@@ -3103,7 +3118,13 @@ static void synaptics_ts_button_func(struct synaptics_ts_data *ts)
 				input_report_abs(ts->input_dev, ABS_MT_POSITION_Y,
 					y_position);
 				input_mt_sync(ts->input_dev);
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+			   }
+#endif
 			} else if (ts->htc_event == SYN_AND_REPORT_TYPE_B) {
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+			   if (scr_suspended == false) {
+#endif
 				if (ts->support_htc_event) {
 					input_report_abs(ts->input_dev, ABS_MT_AMPLITUDE,
 						100 << 16 | 100);
@@ -3123,11 +3144,18 @@ static void synaptics_ts_button_func(struct synaptics_ts_data *ts)
 					x_position);
 				input_report_abs(ts->input_dev, ABS_MT_POSITION_Y,
 					y_position);
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+			   }
+#endif
 			}
 		}
 	}else {
 		printk("[TP] virtual key released\n");
 		vk_press = 0;
+
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+	   if (scr_suspended == false) {
+#endif
 		if (ts->htc_event == SYN_AND_REPORT_TYPE_A) {
 			if (ts->support_htc_event) {
 				input_report_abs(ts->input_dev, ABS_MT_AMPLITUDE, 0);
@@ -3143,9 +3171,17 @@ static void synaptics_ts_button_func(struct synaptics_ts_data *ts)
 			input_mt_slot(ts->input_dev, 0);
 			input_mt_report_slot_state(ts->input_dev, MT_TOOL_FINGER, 0);
 		}
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+	   }	
+#endif
 	}
-
-	input_sync(ts->input_dev);
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+	if (scr_suspended == false) {
+#endif
+		input_sync(ts->input_dev);
+#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
+	}	
+#endif
 }
 
 static void synaptics_ts_status_func(struct synaptics_ts_data *ts)
