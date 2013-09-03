@@ -1054,6 +1054,7 @@ static struct htc_battery_platform_data htc_battery_pdev_data = {
 	.critical_alarm_vol_cols = sizeof(critical_alarm_voltage_mv) / sizeof(int),
 	.overload_vol_thr_mv = 4000,
 	.overload_curr_thr_ma = 0,
+	.smooth_chg_full_delay_min = 1,
 	
 #ifdef CONFIG_SMB349_CHARGER
 	.icharger.name = "smb349",
@@ -2600,6 +2601,7 @@ static struct synaptics_i2c_rmi_platform_data syn_ts_3k_data[] = {
 		.report_type = SYN_AND_REPORT_TYPE_B,
 		.default_config = 1,
 		.tw_pin_mask = 0x0088,
+		.reduce_report_level = {60, 60, 50, 0, 0},
 		.sensor_id = SENSOR_ID_CHECKING_EN | 0x0,
 		.psensor_detection = 1,
 		.reduce_report_level = {60, 60, 50, 0, 0},
@@ -2664,6 +2666,7 @@ static struct synaptics_i2c_rmi_platform_data syn_ts_3k_data[] = {
 		.tw_pin_mask = 0x0088,
 		.sensor_id = SENSOR_ID_CHECKING_EN | 0x80,
 		.psensor_detection = 1,
+		.reduce_report_level = {60, 60, 50, 0, 0},
 		.reduce_report_level = {60, 60, 50, 0, 0},
 		.virtual_key = m7_vk_data,
 		.lpm_power = synaptics_power_LPM,
