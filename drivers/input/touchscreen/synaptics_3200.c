@@ -171,27 +171,26 @@ extern uint8_t touchscreen_is_on(void)
 } 
 
 #ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_SWEEP2WAKE
-int button_id = 0;
-int home_press_time = 0;
-int suppress_home = 0;
-int cancel_pwrtrigger = 0;
-int s2w_switch = 1;
-int l2m_switch = 1;
-int l2w_switch = 0;
-int dt2w_switch = 1;
-int pocket_detect = 1;
-int s2w_hist[2] = {0, 0};
-cputime64_t s2w_time[3] = {0, 0, 0};
-int l2m_hist[2] = {0, 0};
-cputime64_t l2m_time[2] = {0, 0};
-cputime64_t dt2w_time[2] = {0, 0};
-unsigned int dt2w_x[2] = {0, 0};
-unsigned int dt2w_y[2] = {0, 0};
-cputime64_t pwrtrigger_time[2] = {0, 0};
-int wakesleep_vib = 0;
-int vib_strength = 15;
+static int button_id = 0;
+static int home_press_time = 0;
+static int suppress_home = 0;
+static int cancel_pwrtrigger = 0;
+static int s2w_switch = 1;
+static int l2m_switch = 1;
+static int l2w_switch = 0;
+static int dt2w_switch = 1;
+static int pocket_detect = 1;
+static int s2w_hist[2] = {0, 0};
+static cputime64_t s2w_time[3] = {0, 0, 0};
+static cputime64_t l2m_time[2] = {0, 0};
+static cputime64_t dt2w_time[2] = {0, 0};
+static unsigned int dt2w_x[2] = {0, 0};
+static unsigned int dt2w_y[2] = {0, 0};
+static cputime64_t pwrtrigger_time[2] = {0, 0};
+static int wakesleep_vib = 0;
+static int vib_strength = 15;
 static int break_longtap_count = 0;
-int button_timeout = 0;
+static int button_timeout = 4;
 #define S2W_START 30
 #define S2W_TIMEOUT 350
 #define S2W_TIMEOUT2 600
@@ -265,10 +264,10 @@ void sweep2wake_pwrtrigger(void) {
         pwrtrigger_time[1] = pwrtrigger_time[0];
         pwrtrigger_time[0] = ktime_to_ms(ktime_get());	
 
-	printk("[S2W] pwrtrigger2=%llu pwrtrigger1=%llu\n ", pwrtrigger_time[1], pwrtrigger_time[0]);
+	//printk("[S2W] pwrtrigger2=%llu pwrtrigger1=%llu\n ", pwrtrigger_time[1], pwrtrigger_time[0]);
 
 	if ((pwrtrigger_time[0] - pwrtrigger_time[1] < S2W_TIMEOUT3) && cancel_pwrtrigger != 2) {
-		printk("not enough time\n");
+		//printk("not enough time\n");
 		return;
 	}
 	if (!cancel_pwrtrigger)
@@ -2466,41 +2465,42 @@ static void sweep2wake_func(int button_id, cputime64_t strigger_time) {
         s2w_time[1] = s2w_time[0];
         s2w_time[0] = strigger_time;
 
-		if (scr_suspended && s2w_hist[0] == 2)
-			s2w_hist[1] = 0;
-		else	
-			s2w_hist[1] = s2w_hist[0];
+	if (scr_suspended && s2w_hist[0] == 2)
+		s2w_hist[1] = 0;
+	else	
+		s2w_hist[1] = s2w_hist[0];
+
         s2w_hist[0] = button_id;
 
-	printk("[S2W]: in func button id 1=%i, button id 2= %i\n", s2w_hist[0], s2w_hist[1]);
-	printk("[S2W]: in func button time1=%llu, button time2= %llu, button time3= %llu\n", s2w_time[0], s2w_time[1], s2w_time[2]);
+	//printk("[S2W]: in func button id 1=%i, button id 2= %i\n", s2w_hist[0], s2w_hist[1]);
+	//printk("[S2W]: in func button time1=%llu, button time2= %llu, button time3= %llu\n", s2w_time[0], s2w_time[1], s2w_time[2]);
 
 	if ((s2w_time[0]-s2w_time[2]) < S2W_TIMEOUT2 && !scr_suspended) {
-		printk("[S2W]: canceled by timeout2\n");
+		//printk("[S2W]: canceled by timeout2\n");
 		return;
 	}
 
 	if ((s2w_time[0]-s2w_time[1]) < S2W_TIMEOUT && (s2w_time[0]-s2w_time[1]) > S2W_START) {
 
 		if (s2w_switch == 1 && (s2w_hist[1] == 1 && s2w_hist[0] == 2) && scr_suspended) {
-                printk("[S2W]: OFF->ON\n");
-				wakesleep_vib = 1;
-				cancel_pwrtrigger = 0;
-				sweep2wake_pwrtrigger();
-				return;
+                	//printk("[S2W]: OFF->ON\n");
+			wakesleep_vib = 1;
+			cancel_pwrtrigger = 0;
+			sweep2wake_pwrtrigger();
+			return;
 
 		} else if ((s2w_hist[1] == 2 && s2w_hist[0] == 1) && !scr_suspended) {
-	            printk("[S2W]: ON->OFF\n");
-				//wakesleep_vib = 1;
-				cancel_pwrtrigger = 0;
-				sweep2wake_pwrtrigger();
-				return;
+			//printk("[S2W]: ON->OFF\n");
+			//wakesleep_vib = 1;
+			cancel_pwrtrigger = 0;
+			sweep2wake_pwrtrigger();
+			return;
 
 		} else if ((s2w_hist[1] == 2 && s2w_hist[0] == 1) && scr_suspended) {
-				printk("[S2W]: ON->OFF (cancel, screen already off)\n");
-				cancel_pwrtrigger = 2;
-	            sweep2wake_pwrtrigger();
-				return;
+			//printk("[S2W]: ON->OFF (cancel, screen already off)\n");
+			cancel_pwrtrigger = 2;
+			sweep2wake_pwrtrigger();
+			return;
 
 		} else if ((s2w_hist[1] == 1 && s2w_hist[0] == 2) && !scr_suspended) {
 			    printk("[S2W]: OFF->ON (cancel, screen already on)\n");
@@ -2513,8 +2513,6 @@ static void sweep2wake_func(int button_id, cputime64_t strigger_time) {
 }
 
 static void logo2menu_func(void) {
-
-	// printk(KERN_INFO "button id 1=%i, button id 2= %i\n", l2m_hist[0], l2m_hist[1]);
 
 	if (l2m_switch == 1 && scr_suspended == false && ((l2m_time[0]-l2m_time[1]) < L2M_TIMEOUT)) {
 		// printk("[L2M]: menu button activated\n");

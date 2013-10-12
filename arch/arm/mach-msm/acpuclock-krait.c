@@ -68,11 +68,11 @@ static void set_acpuclk_L2_freq_foot_print(unsigned khz)
 
 /** elementalx defs  **/
 
-int uv_bin = 0;
-uint32_t arg_max_oc0 = 1728000;
-uint32_t arg_max_oc1 = 1728000;
-uint32_t arg_max_oc2 = 1728000;
-uint32_t arg_max_oc3 = 1728000;
+static int uv_bin = 0;
+static uint32_t arg_max_oc0 = 1728000;
+static uint32_t arg_max_oc1 = 1728000;
+static uint32_t arg_max_oc2 = 1728000;
+static uint32_t arg_max_oc3 = 1728000;
 
 /* boot arg max_oc */
 static int __init cpufreq_read_arg_max_oc0(char *max_oc0)
