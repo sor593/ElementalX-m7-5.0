@@ -499,7 +499,7 @@ struct regulator_init_data m7wl_saw_regulator_pdata_8821_s0 =
 struct regulator_init_data m7wl_saw_regulator_pdata_8821_s1 =
 	SAW_VREG_INIT(8821_S1, "8821_s1",       700000, 1350000);
 
-struct pm8xxx_regulator_platform_da2a
+struct pm8xxx_regulator_platform_data
 m7wl_pm8921_regulator_pdata[] __devinitdata = {
 	PM8XXX_NLDO1200(L26, "8921_l26", 0, 1, 375000, 1050000, 200, "8921_s7",
 		0, 1),
