@@ -196,7 +196,7 @@ ARCH		?= $(SUBARCH)
 CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
 ARCH		:= arm
 #CROSS_COMPILE	:= arm-cortexa15neon-eabi-
-CROSS_COMPILE	:= arm-unknown-eabi-
+CROSS_COMPILE	:= arm-eabi-
 
 # Architecture as present in compile.h
 UTS_MACHINE 	:= $(ARCH)
